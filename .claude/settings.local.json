@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew build:*)",
+      "Bash(./gradlew run)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(/tmp/test_response.txt)",
+      "Bash(cat:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
