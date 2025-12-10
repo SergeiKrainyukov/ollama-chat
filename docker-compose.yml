@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # Ollama - локальная LLM платформа
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    networks:
+      - ollama-network
+    # Для GPU поддержки (NVIDIA) раскомментируйте:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  # Наше приложение - API сервер для чата
+  chat-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ollama-chat-api
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - HOST=0.0.0.0
+      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:1.5b}
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    networks:
+      - ollama-network
+
+  # Nginx для reverse proxy (опционально)
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro  # Для SSL сертификатов
+    depends_on:
+      - chat-api
+    restart: unless-stopped
+    networks:
+      - ollama-network
+
+volumes:
+  ollama_data:
+    driver: local
+
+networks:
+  ollama-network:
+    driver: bridge

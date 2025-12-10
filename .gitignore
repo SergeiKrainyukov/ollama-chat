@@ -2,3 +2,27 @@
 /.gradle/
 /build/
 /build/classes/kotlin/main/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Environment
+.env
+
+# SSL Certificates
+ssl/
+*.pem
+*.key
+*.crt
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Old files (backups)
+*.old

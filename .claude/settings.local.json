@@ -6,7 +6,9 @@
       "Bash(curl:*)",
       "Bash(python3:*)",
       "Bash(/tmp/test_response.txt)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(chmod:*)",
+      "Bash(./gradlew clean build:*)"
     ],
     "deny": [],
     "ask": []
